@@ -79,20 +79,21 @@ def ampdFast(sigInput, order):
         pks: ndarray
             The ordered array of peaks found in sigInput
     """
-
-    # Check if order is valid (perfectly separable)
-    if len(sigInput) % order != 0:
-        print("AMPD: Invalid order, decreasing order")
-        while len(sigInput) % order != 0:
-            order -= 1
-        print("AMPD: Using order " + str(order))
-
-    N = int(len(sigInput) / order / 2)
+    L = len(sigInput)
+    N = int(L / order / 2)
 
     # Loop function calls
-    for i in range(0, len(sigInput) - N, N):
-        print("\t sector: " + str(i) + "|" + str((i + 2 * N - 1)))
-        pksTemp = ampd(sigInput[i:(i + 2 * N - 1)])
+    for i in range(0, L - N, N):
+
+        end = i + 2 * N - 1
+
+        if end > L:
+            print('\t sector: {} | {}'.format(i, L))
+            pksTemp = ampd(sigInput[i:])
+        else:
+            print('\t sector: {} | {}'.format(i, end))
+            pksTemp = ampd(sigInput[i:(i + 2 * N - 1)])
+
         if i == 0:
             pks = pksTemp
         else:
